@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="/../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="/../assets/img/favicon.png">
+  <title>
+    e-Mutabakat Sitesi
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css" />
+  <!-- Font Awesome Icons -->
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+
+<body class="">
+  <main class="main-content mt-0" *ngIf="isRegisterComplete">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row">
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
+              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" style="background-image: url('../assets/img/illustrations/illustration-signup.jpg'); background-size: cover;">
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
+              <div class="card card-plain">
+                <div class="card-header">
+                  <h4 class="font-weight-bolder">Kayıt Başarıyla Tamamlandı</h4>
+                  <p><i>Kayıt işleminiz başarıyla tamamlandı. Sisteme giriş yapabilmek için mail adresinize gelen linki tıklayarak <strong>mailinizi onaylamanız gerekmektedir.</strong> Eğer mail gelmediyse giriş sayfasından tekrar onay maili gönderebilirsiniz.</i></p>
+                </div>
+                <div class="card-body">
+
+                </div>
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-2 text-sm mx-auto">
+                    Zaten hesabınız var mı?
+                    <a href="/login" class="text-primary text-gradient font-weight-bold">Giriş Yapın</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <main class="main-content  mt-0" *ngIf="!isRegisterComplete">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row">
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 start-0 text-center justify-content-center flex-column">
+              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center" style="background-image: url('../assets/img/illustrations/illustration-signup.jpg'); background-size: cover;">
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
+              <div class="card card-plain">
+                <div class="card-header">
+                  <h4 class="font-weight-bolder">Kayıt Ol</h4>
+                  <p class="mb-0">Kayıt olmak için bilgilerinizi girin</p>
+                </div>
+                <div class="card-body">
+                  <form role="form" [formGroup]="registerForm">
+                    <h4>Kullanıcı Bilgileri</h4>
+                    <hr>
+                    <div [class]="changeInputClass(name)">
+                      <label class="form-label">Ad Soyad</label>
+                      <input type="text" formControlName="name" [(ngModel)]="name" class="form-control">
+                    </div>
+                    <div [class]="changeInputClass(email)">
+                      <label class="form-label">Mail Adresi</label>
+                      <input type="email" formControlName="email" [(ngModel)]="email" class="form-control">
+                    </div>
+                    <div [class]="changeInputClass(password)">
+                      <label class="form-label">Şifre</label>
+                      <input type="password" formControlName="password" [(ngModel)]="password" class="form-control">
+                    </div>
+                    <hr>
+                    <h4>Şirket Bilgileri Bilgileri</h4>
+                    <hr>
+                    <div [class]="changeInputClass(companyName)">
+                      <label class="form-label">Firma Adı</label>
+                      <input type="text" formControlName="companyName" [(ngModel)]="companyName" class="form-control">
+                    </div>
+                    <div [class]="changeInputClass(address)">
+                      <label class="form-label">Adres</label>
+                      <input type="text" formControlName="address" [(ngModel)]="address" class="form-control">
+                    </div>
+                    <div [class]="changeInputClass(taxDepartment)">
+                      <label class="form-label">Vergi Dairesi</label>
+                      <input type="text" formControlName="taxDepartment" [(ngModel)]="taxDepartment" class="form-control">
+                    </div>
+                    <div [class]="changeInputClass(taxIdNumber)">
+                      <label class="form-label">Vergi Numarası</label>
+                      <input type="text" formControlName="taxIdNumber" [(ngModel)]="taxIdNumber" maxlength="10" class="form-control">
+                    </div>
+                    <div [class]="changeInputClass(identityNumber)">
+                      <label class="form-label">T.C. Numarası</label>
+                      <input type="text" formControlName="identityNumber" [(ngModel)]="identityNumber" maxlength="11" class="form-control">
+                    </div>
+                    <div class="form-check form-switch d-flex align-items-center mb-3">
+                      <input class="form-check-input" type="checkbox" [(ngModel)]="termsAndConditionsCheck" [ngModelOptions]="{standalone: true}" id="terms">
+                      <label class="form-check-label mb-0 ms-2" for="terms">
+                        <a class="text-dark font-weight-bolder" data-bs-toggle="modal" data-bs-target="#termsAndConditionsModal">Kullanıcı sözleşmesini Onaylıyorum</a>
+                      </label>
+                    </div>
+                    <div class="text-center" *ngIf="isRegisterButtonActive">
+                      <button type="button" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0" (click)="register()">Kayıt Ol</button>
+                    </div>
+                    <div class="text-center" *ngIf="!isRegisterButtonActive">
+                      <button class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Kayıt yapılıyor...
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-2 text-sm mx-auto">
+                    Zaten hesabınız var mı?
+                    <a href="/login" class="text-primary text-gradient font-weight-bold">Giriş Yapın</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+</body>
+
+</html>
+
+
+<!-- Modal -->
+<div class="modal fade" id="termsAndConditionsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Kullanım Sözleşmesi</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p [innerHtml]="termsAndConditions.description"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
