@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -32,6 +32,7 @@ export class RegisterComponent implements OnInit {
   isRegisterComplete:boolean = false;
 
   constructor(
+    @Inject('validHatasi') private validHatasi:string,
     private authService:AuthService,
     private formBuilder: FormBuilder,
     private toastr:ToastrService,
@@ -90,7 +91,7 @@ export class RegisterComponent implements OnInit {
           this.toastr.error(err.error)
         })
       }else{
-        this.toastr.error("Eksik bilgileri dolurun!","Hata!")
+        this.toastr.error(this.validHatasi)
       }
     }else{
       this.toastr.warning("Kullanıcı sözleşmesini onaylamadan kayıt olamazsınız","Hata!")

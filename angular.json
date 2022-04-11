@@ -35,7 +35,8 @@
               "src/assets/css/nucleo-icons.css",
               "src/assets/css/nucleo-svg.css",
               "src/assets/css/material-dashboard.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/ngx-spinner/animations/square-jelly-box.css"
             ],
             "scripts": [
               "src/assets/js/core/popper.min.js",

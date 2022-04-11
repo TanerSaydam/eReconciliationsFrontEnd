@@ -10168,7 +10168,7 @@ fieldset:disabled .btn {
 }
 
 .text-uppercase {
-  text-transform: uppercase !important;
+ /* text-transform: uppercase !important; */
 }
 
 .text-capitalize {
