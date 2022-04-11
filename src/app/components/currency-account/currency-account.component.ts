@@ -5,8 +5,10 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CurrencyAccount } from 'src/app/models/currencyAccount';
+import { UserOperationClaim } from 'src/app/models/userOperationClaimModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrencyAccountService } from 'src/app/services/currency-account.service';
+import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -21,6 +23,7 @@ export class CurrencyAccountComponent implements OnInit {
   jwtHelper: JwtHelperService = new JwtHelperService;
 
   currencyAccounts: CurrencyAccount[] = []
+  userOperationCliams: UserOperationClaim[] = []
   currencyAccount: CurrencyAccount = {
     addedAt: "",
     address: "",
@@ -41,6 +44,7 @@ export class CurrencyAccountComponent implements OnInit {
 
   isAuthenticated: boolean;
   companyId: string;
+  userId: string;
   searchString: string;
   allList: boolean = false;
   activeList: boolean = true;
@@ -59,18 +63,25 @@ export class CurrencyAccountComponent implements OnInit {
   email: string;
   authorized: string;
   file:string;
+  operationAdd = false;
+  operationUpdate = false;
+  operationDelete = false;
+  operationGet = false;
+  operationList = false;
 
   constructor(
     private currencyAccountService: CurrencyAccountService,
     private authService: AuthService,
     private spinner: NgxSpinnerService,
-    private tostr: ToastrService,
+    private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private userOperationClaimService:UserOperationClaimService
   ) { }
 
   ngOnInit(): void {
     this.refresh();
+    this.userOperationClaimGetList()
     this.getlist();
     this.createAddForm();
     this.createUpdateForm();
@@ -81,9 +92,55 @@ export class CurrencyAccountComponent implements OnInit {
     if (this.isAuthenticated) {
       let token = localStorage.getItem("token");
       let decode = this.jwtHelper.decodeToken(token);
+      //console.log(decode)
       let companyId = Object.keys(decode).filter(x => x.endsWith("/anonymous"))[0];
+      let userId = Object.keys(decode).filter(x => x.endsWith("/nameidentifier"))[0];
       this.companyId = decode[companyId];
+      this.userId = decode[userId];
     }
+  }
+
+  userOperationClaimGetList(){
+    this.showSpinner();
+    this.userOperationClaimService.getlist(this.userId,this.companyId).subscribe((res) => {
+      this.userOperationCliams = res.data;
+      this.userOperationCliams.forEach(element => {
+        if (element.operationClaimName == "Admin") {
+          this.operationAdd = true;
+          this.operationUpdate = true;
+          this.operationDelete = true;
+          this.operationGet = true;
+          this.operationList = true;
+        }
+
+        if (element.operationClaimName == "CurrencyAccount.Add") {
+          this.operationAdd = true;
+        }
+
+        if (element.operationClaimName == "CurrencyAccount.Update") {
+          this.operationUpdate = true;
+        }
+
+        if (element.operationClaimName == "CurrencyAccount.Delete") {
+          this.operationDelete = true;
+        }
+
+        if (element.operationClaimName == "CurrencyAccount.Get") {
+          this.operationGet = true;
+        }
+
+        if (element.operationClaimName == "CurrencyAccount.GetList") {
+          this.operationList = true;
+        }
+      });
+
+      //console.log(this.userOperationCliams)
+      this.hideSpinner();
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
   }
 
   getlist() {
@@ -92,7 +149,7 @@ export class CurrencyAccountComponent implements OnInit {
       this.currencyAccounts = res.data;
       this.hideSpinner();
     }, (err) => {
-      this.tostr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
       //console.log(err)
       this.hideSpinner();
     })
@@ -142,7 +199,6 @@ export class CurrencyAccountComponent implements OnInit {
     });
   }
 
-
   changeInputClass(text: string) {
     if (text != "") {
       return "input-group input-group-outline is-valid my-3"
@@ -163,11 +219,11 @@ export class CurrencyAccountComponent implements OnInit {
     this.showSpinner();
     this.currencyAccountService.delete(currencyAccount).subscribe((res) => {
       this.hideSpinner();
-      this.tostr.info(res.message);
+      this.toastr.info(res.message);
       this.getlist();
     }, (err) => {
       //console.log(err);
-      this.tostr.error(err.error)
+      this.toastr.error(err.error)
       this.hideSpinner();
     })
   }
@@ -178,11 +234,11 @@ export class CurrencyAccountComponent implements OnInit {
 
     this.currencyAccountService.update(currencyAccount).subscribe((res) => {
       this.hideSpinner();
-      this.tostr.warning(res.message);
+      this.toastr.warning(res.message);
       this.getlist();
     }, (err) => {
       //console.log(err);
-      this.tostr.error(err.error)
+      this.toastr.error(err.error)
       this.hideSpinner();
     })
   }
@@ -194,17 +250,17 @@ export class CurrencyAccountComponent implements OnInit {
       this.showSpinner();
       this.currencyAccountService.add(currencyAccountModel).subscribe((res) => {
         this.hideSpinner();
-        this.tostr.success(res.message);
+        this.toastr.success(res.message);
         this.getlist();
         this.createAddForm();
         document.getElementById("closeModal").click();
       }, (err) => {
         //console.log(err);
-        this.tostr.error(err.error)
+        this.toastr.error(err.error)
         this.hideSpinner();
       })
     }else{
-      this.tostr.error(this.validHatasi);
+      this.toastr.error(this.validHatasi);
     }
   }
 
@@ -214,17 +270,17 @@ export class CurrencyAccountComponent implements OnInit {
       this.showSpinner();
       this.currencyAccountService.update(currencyAccountModel).subscribe((res) => {
         this.hideSpinner();
-        this.tostr.warning(res.message);
+        this.toastr.warning(res.message);
         this.getlist();
         this.createAddForm();
         document.getElementById("closeUpdateModal").click();
       }, (err) => {
         //console.log(err);
-        this.tostr.error(err.error)
+        this.toastr.error(err.error)
         this.hideSpinner();
       })
     }else{
-      this.tostr.error(this.validHatasi);
+      this.toastr.error(this.validHatasi);
     }
   }
 
@@ -234,9 +290,6 @@ export class CurrencyAccountComponent implements OnInit {
   }
 
   getListByCheck(text: string) {
-    console.log(this.allList);
-    console.log(this.activeList);
-    console.log(this.passiveList);
 
     if (text == "allList") {
       this.activeList = false;
@@ -291,7 +344,7 @@ export class CurrencyAccountComponent implements OnInit {
       //console.log(this.currencyAccount)
     }, (err) => {
       //console.log(err);
-      this.tostr.error(err.error)
+      this.toastr.error(err.error)
       this.hideSpinner();
     })
   }
@@ -305,17 +358,17 @@ export class CurrencyAccountComponent implements OnInit {
       this.showSpinner();
       this.currencyAccountService.addFromExcel(this.file,this.companyId).subscribe((res) => {
         this.hideSpinner();
-        this.tostr.success(res.message);
+        this.toastr.success(res.message);
         this.getlist();
         document.getElementById("closeAddFromExcelModal").click();
         this.file = "";
       }, (err) => {
         //console.log(err);
-        this.tostr.error(err.error)
+        this.toastr.error(err.error)
         this.hideSpinner();
       })
     }else{
-      this.tostr.error(this.validHatasi);
+      this.toastr.error(this.validHatasi);
     }
   }
 

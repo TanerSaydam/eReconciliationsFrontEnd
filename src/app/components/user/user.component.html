@@ -1,0 +1,204 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Yükleniyor... </p>
+</ngx-spinner>
+
+<aside
+  class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+  id="sidenav-main">
+  <app-sidenav></app-sidenav>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <app-nav></app-nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">
+                {{title}} - <i class="text-dark"> * Burada sadece mevcut şirketin kullanıcıları listelenir</i>
+              </h6>
+              <button *ngIf="operationAdd" type="button" class="btn btn-warning mx-3" data-bs-toggle="modal" data-bs-target="#addModal">
+                <i class="material-icons opacity-10">person_add</i>
+                Kullanıcı Ekle
+              </button>
+            </div>
+          </div>
+          <div *ngIf="operationList">
+          <div class="card-body">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-5">
+                  <button type="button" class="btn btn-info" (click)="exportExcel()">
+                    <i class="fa fa-file-excel"></i>
+                    Kullanıcı Listesini Excel'e Aktar
+                  </button>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-check form-switch d-flex align-items-center mb-3">
+                    <input class="form-check-input" type="checkbox" id="allList" [(ngModel)]="allList" (change)="getListByCheck('allList')">
+                    <label class="form-check-label mb-0 ms-2" for="allList"> Tümü</label>
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-check form-switch d-flex align-items-center mb-3">
+                    <input class="form-check-input" type="checkbox" id="activeList" [(ngModel)]="activeList" (change)="getListByCheck('activeList')" checked>
+                    <label class="form-check-label mb-0 ms-2" for="activeList"> Aktif</label>
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-check form-switch d-flex align-items-center mb-3">
+                    <input class="form-check-input" type="checkbox" id="passiveList" [(ngModel)]="passiveList" (change)="getListByCheck('passiveList')">
+                    <label class="form-check-label mb-0 ms-2" for="passiveList"> Pasif</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="input-group input-group-outline my-3" style="width: 50%; margin-left: 50%;">
+                    <label class="form-label">Aranacak Kelimeyi Yazın</label>
+                    <input type="text" autocomplete="off" [(ngModel)]="searchString" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive p-0">
+              <table id="excel-table" class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Kullanıcı Adı</th>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Mail Adresi</th>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Kayıt Tarihi</th>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Durumu</th>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users | userPipe: searchString | userFilterPipe : filterText">
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ user.name }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ user.email }}</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm"><i class=text-danger>Kayıt Tarihi:</i> {{ user.userAddedAt |
+                            date: 'dd.MM.yyyy' }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm"><i class=text-danger>Durumu:</i> {{ user.userIsActive?
+                            "Aktif":"Pasif" }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle">
+                      <button *ngIf="operationUpdate" type="button" class="btn btn-warning btn-sm mx-2" title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateModal" (click)="getById(user.userId)">
+                        <i class="material-icons opacity-10">edit</i>
+                      </button>
+                      <button *ngIf="operationUpdate" type="button" [swal]="changeStatusSwal" (confirm)="changeStatus(user.userId)" class="btn btn-info btn-sm mx-2" title="Durumunu Değiştir">
+                        <i class="material-icons opacity-10">check_box</i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<swal #changeStatusSwal title="Durumu Değiştir?" text="Kullanıcının durumunu (Aktif <==> Pasif) değiştirmek istiyor musunuz?" type="question" [showCancelButton]="true" [focusCancel]="true" [swalOptions]="{ confirmButtonText: 'Değiştir' }"></swal>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Cari Ekleme Formu</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addForm">
+          <div [class]="changeInputClass(name)">
+            <label class="form-label">Kullanıcı Adı</label>
+            <input type="text" formControlName="name" [(ngModel)]="name" class="form-control">
+          </div>
+          <div [class]="changeInputClass(email)">
+            <label class="form-label">Mail Adresi</label>
+            <input type="text" formControlName="email" [(ngModel)]="email" class="form-control">
+          </div>
+          <div [class]="changeInputClass(password)">
+            <label class="form-label">Şifre</label>
+            <input type="password" formControlName="password" [(ngModel)]="password" class="form-control">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="add()">Kullanıcı Ekle</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeModal" data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Kullanıcı Güncelleme Formu</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm">
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="name" placeholder="Cari Ad">
+            <span class="input-group-text"  id="basic-addon2">Cari Ad</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="email" placeholder="Mail Adresi">
+            <span class="input-group-text" id="basic-addon2">Mail Adresi</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="password" class="form-control" formControlName="password" placeholder="Şifre">
+            <span class="input-group-text" id="basic-addon2">Şifre</span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="update()">Kullanıcı Güncelle</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateModal" data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -19,16 +19,17 @@
               <h6 class="text-white text-capitalize ps-3">
                 {{title}}
               </h6>
-              <button type="button" class="btn btn-warning mx-3" data-bs-toggle="modal" data-bs-target="#addModal">
+              <button *ngIf="operationAdd" type="button" class="btn btn-warning mx-3" data-bs-toggle="modal" data-bs-target="#addModal">
                 <i class="material-icons opacity-10">person_add</i>
                 Cari Ekle
               </button>
-              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExcelModal">
+              <button *ngIf="operationAdd" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExcelModal">
                 <i class="material-icons opacity-10">attach_file</i>
                 Excel'den Cari Liste Yükleme
               </button>
             </div>
           </div>
+          <div *ngIf="operationList">
           <div class="card-body">
             <div class="form-group">
               <div class="row">
@@ -41,19 +42,19 @@
                 <div class="col-md-1">
                   <div class="form-check form-switch d-flex align-items-center mb-3">
                     <input class="form-check-input" type="checkbox" id="allList" [(ngModel)]="allList" (change)="getListByCheck('allList')">
-                    <label class="form-check-label mb-0 ms-2" for="allList">Tümü</label>
+                    <label class="form-check-label mb-0 ms-2" for="allList"> Tümü</label>
                   </div>
                 </div>
                 <div class="col-md-1">
                   <div class="form-check form-switch d-flex align-items-center mb-3">
                     <input class="form-check-input" type="checkbox" id="activeList" [(ngModel)]="activeList" (change)="getListByCheck('activeList')" checked>
-                    <label class="form-check-label mb-0 ms-2" for="activeList">Aktif</label>
+                    <label class="form-check-label mb-0 ms-2" for="activeList"> Aktif</label>
                   </div>
                 </div>
                 <div class="col-md-1">
                   <div class="form-check form-switch d-flex align-items-center mb-3">
                     <input class="form-check-input" type="checkbox" id="passiveList" [(ngModel)]="passiveList" (change)="getListByCheck('passiveList')">
-                    <label class="form-check-label mb-0 ms-2" for="passiveList">Pasif</label>
+                    <label class="form-check-label mb-0 ms-2" for="passiveList"> Pasif</label>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -123,13 +124,13 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <button type="button" class="btn btn-warning btn-sm mx-2" title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateModal" (click)="getCurrencyAccount(currencyAccount.id)">
+                      <button *ngIf="operationUpdate" type="button" class="btn btn-warning btn-sm mx-2" title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateModal" (click)="getCurrencyAccount(currencyAccount.id)">
                         <i class="material-icons opacity-10">edit</i>
                       </button>
-                      <button type="button" (click)="currenctCurrency(currencyAccount)" [swal]="changeStatusSwal" (confirm)="changeStatusCurrencyAccount(currencyAccount)" class="btn btn-info btn-sm mx-2" title="Durumunu Değiştir">
+                      <button *ngIf="operationUpdate" type="button" (click)="currenctCurrency(currencyAccount)" [swal]="changeStatusSwal" (confirm)="changeStatusCurrencyAccount(currencyAccount)" class="btn btn-info btn-sm mx-2" title="Durumunu Değiştir">
                         <i class="material-icons opacity-10">check_box</i>
                       </button>
-                      <button type="button" (click)="currenctCurrency(currencyAccount)" [swal]="deleteSwal" (confirm)="deleteCurrencyAccount(currencyAccount)" class="btn btn-primary btn-sm" title="Sil">
+                      <button *ngIf="operationDelete" type="button" (click)="currenctCurrency(currencyAccount)" [swal]="deleteSwal" (confirm)="deleteCurrencyAccount(currencyAccount)" class="btn btn-primary btn-sm" title="Sil">
                         <i class="material-icons opacity-10">restore_from_trash</i>
                       </button>
                     </td>
@@ -138,6 +139,7 @@
               </table>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -188,7 +190,7 @@
           </div>
           <div [class]="changeInputClass(email)">
             <label class="form-label">Mail Adresi</label>
-            <input type="text" formControlName="identityNumber" [(ngModel)]="email" class="form-control">
+            <input type="text" formControlName="email" [(ngModel)]="email" class="form-control">
           </div>
           <div [class]="changeInputClass(authorized)">
             <label class="form-label">Yetkili Kişi</label>

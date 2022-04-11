@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
 
 @Component({
   selector: 'app-nav',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private userOperationClaimService:UserOperationClaimService
+  ) { }
 
   ngOnInit(): void {
   }
+
+ 
 
 }

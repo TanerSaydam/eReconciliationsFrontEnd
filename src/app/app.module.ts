@@ -21,6 +21,9 @@ import { CurrencyAccountPipe } from './pipe/currency-account.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { CurrencyAccountFilterPipe } from './pipe/currency-account-filter.pipe';
+import { UserComponent } from './components/user/user.component';
+import { UserPipe } from './pipe/user.pipe';
+import { UserFilterPipe } from './pipe/user-filter.pipe';
 
 
 @NgModule({
@@ -35,7 +38,10 @@ import { CurrencyAccountFilterPipe } from './pipe/currency-account-filter.pipe';
     SidenavComponent,
     CurrencyAccountComponent,
     CurrencyAccountPipe,
-    CurrencyAccountFilterPipe
+    CurrencyAccountFilterPipe,
+    UserComponent,
+    UserPipe,
+    UserFilterPipe
   ],
   imports: [
     BrowserModule,
