@@ -3,7 +3,7 @@
  navbar-scroll="true">
  <div class="container-fluid py-1 px-3">
    <nav aria-label="breadcrumb">
-     <h6 class="font-weight-bolder mb-0">Şirket Adı</h6>
+     <h6 class="font-weight-bolder mb-0"><i class="text-danger">Şirket: </i> <i>{{companyName}}</i></h6>
    </nav>
    <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
      <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -11,7 +11,7 @@
      </div>
      <ul class="navbar-nav  justify-content-end">
        <li class="nav-item d-flex align-items-center">
-         <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+         <a href="javascript:;" class="nav-link text-body font-weight-bold px-0" data-bs-toggle="modal" data-bs-target="#updateModal" (click)="getById(userId)">
            <i class="fa fa-user me-sm-1"></i>
            <span class="d-sm-inline d-none">Profil</span>
          </a>
@@ -26,7 +26,7 @@
          </a>
        </li>
        <li class="nav-item px-3 d-flex align-items-center">
-         <a href="javascript:;" class="nav-link text-body p-0">
+         <a href="javascript:;" class="nav-link text-body p-0" (click)="styleClass = 'show'">
            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"> Tema Ayarları</i>
          </a>
        </li>
@@ -36,73 +36,19 @@
            <i class="fa fa-door-open cursor-pointer"> Şirket Değiştir</i>
          </a>
          <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-           <li class="mb-2">
-             <a class="dropdown-item border-radius-md" href="javascript:;">
+           <li class="mb-2" *ngFor="let company of companies">
+             <a class="dropdown-item border-radius-md" href="javascript:;" (click)="changeCompany(company.id)">
                <div class="d-flex py-1">
                  <div class="my-auto">
-                   <img src="./assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                   <img src="./assets/img/home-decor-1.jpg" class="avatar avatar-sm  me-3 ">
                  </div>
                  <div class="d-flex flex-column justify-content-center">
                    <h6 class="text-sm font-weight-normal mb-1">
-                     <span class="font-weight-bold">New message</span> from Laur
+                     <span class="font-weight-bold">{{company.name}}</span>
                    </h6>
                    <p class="text-xs text-secondary mb-0">
-                     <i class="fa fa-clock me-1"></i>
-                     13 minutes ago
-                   </p>
-                 </div>
-               </div>
-             </a>
-           </li>
-           <li class="mb-2">
-             <a class="dropdown-item border-radius-md" href="javascript:;">
-               <div class="d-flex py-1">
-                 <div class="my-auto">
-                   <img src="./assets/img/small-logos/logo-spotify.svg"
-                     class="avatar avatar-sm bg-gradient-dark  me-3 ">
-                 </div>
-                 <div class="d-flex flex-column justify-content-center">
-                   <h6 class="text-sm font-weight-normal mb-1">
-                     <span class="font-weight-bold">New album</span> by Travis Scott
-                   </h6>
-                   <p class="text-xs text-secondary mb-0">
-                     <i class="fa fa-clock me-1"></i>
-                     1 day
-                   </p>
-                 </div>
-               </div>
-             </a>
-           </li>
-           <li>
-             <a class="dropdown-item border-radius-md" href="javascript:;">
-               <div class="d-flex py-1">
-                 <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                   <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1"
-                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                     <title>credit-card</title>
-                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                       <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                         <g transform="translate(1716.000000, 291.000000)">
-                           <g transform="translate(453.000000, 454.000000)">
-                             <path class="color-background"
-                               d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z"
-                               opacity="0.593633743"></path>
-                             <path class="color-background"
-                               d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z">
-                             </path>
-                           </g>
-                         </g>
-                       </g>
-                     </g>
-                   </svg>
-                 </div>
-                 <div class="d-flex flex-column justify-content-center">
-                   <h6 class="text-sm font-weight-normal mb-1">
-                     Payment successfully completed
-                   </h6>
-                   <p class="text-xs text-secondary mb-0">
-                     <i class="fa fa-clock me-1"></i>
-                     2 days
+                     <i class="fa fa-building me-1"></i>
+                     Şirkete Geçiş Yap
                    </p>
                  </div>
                </div>
@@ -114,3 +60,101 @@
    </div>
  </div>
 </nav>
+
+
+<div [class]="changeStyleClass(styleClass)">
+  <!-- <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" (click)="styleClass = 'show'">
+    <i class="material-icons py-2">settings</i>
+  </a> -->
+  <div class="card shadow-lg">
+    <div class="card-header pb-0 pt-3">
+      <div class="float-start">
+        <h5 class="mt-3 mb-0">Tema Ayarları</h5>
+      </div>
+      <div class="float-end mt-4">
+        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button" (click)="styleClass = ''">
+          <i class="material-icons">clear</i>
+        </button>
+      </div>
+      <!-- End Toggle Button -->
+    </div>
+    <hr class="horizontal dark my-1">
+    <div class="card-body pt-sm-3 pt-0">
+      <!-- Sidebar Backgrounds -->
+      <div>
+        <h6 class="mb-0">Sol Menü Renk Ayarı</h6>
+      </div>
+      <a href="javascript:void(0)" class="switch-trigger background-color">
+        <div class="badge-colors my-2 text-start">
+          <span class="badge filter bg-gradient-primary active" data-color="primary"
+            onclick="sidebarColor(this)" (click)="changeSideNav('primary')"></span>
+          <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)" (click)="changeSideNav('dark')"></span>
+          <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)" (click)="changeSideNav('info')"></span>
+          <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)" (click)="changeSideNav('success')"></span>
+          <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)" (click)="changeSideNav('warning')"></span>
+          <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)" (click)="changeSideNav('danger')"></span>
+        </div>
+      </a>
+      <!-- Sidenav Type -->
+      <div class="mt-3">
+        <h6 class="mb-0">Sol Menü Tipi</h6>
+      </div>
+      <div class="d-flex">
+        <button class="btn bg-gradient-dark px-3 mb-2 active" data-class="bg-gradient-dark"
+          onclick="sidebarType(this)" (click)="changeSideType('dark')">Siyah</button>
+        <button class="btn bg-gradient-primary px-3 mb-2 ms-2" data-class="bg-primary"
+          onclick="sidebarType(this)" (click)="changeSideType('primary')">Kırmızı</button>
+        <button class="btn bg-gradient-info px-3 mb-2 ms-2" data-class="bg-info"
+          onclick="sidebarType(this)" (click)="changeSideType('info')">Mavi</button>
+      </div>
+      <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+      <hr class="horizontal dark my-3">
+      <!-- <div class="mt-2 d-flex">
+        <h6 class="mb-0">Gündüz / Gece</h6>
+        <div class="form-check form-switch ps-0 ms-auto my-auto">
+          <input class="form-check-input mt-1 ms-auto" type="checkbox" [(ngModel)]="isDark" id="dark-version" onclick="darkMode(this)" (click)="changeMode(isDark)">
+        </div>
+      </div> -->
+      <hr class="horizontal dark my-sm-4">
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Kullanıcı Güncelleme Formu</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm">
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="name" placeholder="Cari Ad">
+            <span class="input-group-text" id="basic-addon2">Cari Ad</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="email" placeholder="Mail Adresi">
+            <span class="input-group-text" id="basic-addon2">Mail Adresi</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="password" class="form-control" formControlName="password" placeholder="Şifre">
+            <span class="input-group-text" id="basic-addon2">Şifre</span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="update()">Kullanıcı Güncelle</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateModal"
+          data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
-export interface Company {
+export interface AdminCompaniesForUserDto
+{
   id: number;
   name: string;
   address: string;
@@ -7,4 +8,5 @@ export interface Company {
   identityNumber: string;
   addedAt: string;
   isActive: boolean
+  isTrue:boolean;
 }

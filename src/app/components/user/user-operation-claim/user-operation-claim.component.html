@@ -1,0 +1,100 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Yükleniyor... </p>
+</ngx-spinner>
+
+<aside
+  class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-{{ userThemeOption.sidenavType }}"
+  id="sidenav-main">
+  <app-sidenav></app-sidenav>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <app-nav></app-nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">
+                {{title}}
+              </h6>
+            </div>
+          </div>
+          <div>
+          <div class="card-body">
+            <div class="form-group">
+              <p class="alert alert-secondary text-white" role="alert">* Seçili şirket yetkileri aşağıdadır. Yetkiyi değiştirmek için check işaretini tıklamanız yeterli.</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <select class="form-select" [(ngModel)]="selectCompany" (change)="changeCompany()">
+                    <option *ngFor="let company of companies" value="{{ company.id }}">{{company.name }}</option>
+                  </select>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4"><div class="input-group input-group-outline my-3" style="width: 50%; margin-left: 50%;">
+                  <label class="form-label">Aranacak Kelimeyi Yazın</label>
+                  <input type="text" autocomplete="off" [(ngModel)]="searchString" class="form-control">
+                </div></div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive p-0">
+              <table id="excel-table" class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Yetki Adı</th>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Yetki Kodu</th>
+                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Kullanıcı Yetkili Mi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let operationClaim of operationClaimForUserListDto | operationClaimPipe: searchString">
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ operationClaim.description }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ operationClaim.name }}</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" id="fcustomCheck1" [checked]="operationClaim.status" (click)="updateUserOperationClaim(operationClaim)">
+                              <label class="custom-control-label" for="customCheck1"></label>
+                            </div>
+                          </h6>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+
+
+
+

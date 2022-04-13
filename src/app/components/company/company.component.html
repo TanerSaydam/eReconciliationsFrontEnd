@@ -17,12 +17,12 @@
           <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
             <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
               <h6 class="text-white text-capitalize ps-3">
-                {{title}} - <i class="text-dark"></i>
+                {{title}}
               </h6>
               <button *ngIf="operationAdd" type="button" class="btn btn-warning mx-3" data-bs-toggle="modal"
                 data-bs-target="#addModal">
                 <i class="material-icons opacity-10">person_add</i>
-                Kullanıcı Ekle
+                Şirket Ekle
               </button>
             </div>
           </div>
@@ -33,7 +33,7 @@
                   <div class="col-md-5">
                     <button type="button" class="btn btn-info" (click)="exportExcel()">
                       <i class="fa fa-file-excel"></i>
-                      Kullanıcı Listesini Excel'e Aktar
+                      Şirket Listesini Excel'e Aktar
                     </button>
                   </div>
                   <div class="col-md-1">
@@ -72,77 +72,64 @@
                 <table id="excel-table" class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Kullanıcı Adı
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Şirket Adı
                       </th>
-                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Mail Adresi
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Adres</th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Vergi Dairesi
                       </th>
-                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Kayıt Tarihi
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Vergi Numarası
                       </th>
-                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Durumu</th>
-                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Şirketler</th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">T.C.</th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Kayıt Tarihi /
+                        Durumu</th>
                       <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">İşlemler</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      *ngFor="let user of usersReletionShipDto | userPipe: searchString | userFilterPipe : filterText">
+                    <tr *ngFor="let company of companies | companyPipe : searchString | companyFilterPipe : filterText">
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ user.userUserName }}</h6>
+                            <h6 class="mb-0 text-sm">{{ company.name }}</h6>
                           </div>
                         </div>
                       </td>
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{ user.userMail }}</h6>
-                            </div>
+                            <h6 class="mb-0 text-sm">{{ company.address }}</h6>
                           </div>
                         </div>
                       </td>
                       <td>
+                        <h6 class="mb-0 text-sm">{{ company.taxDepartment }}</h6>
+                      </td>
+                      <td>
+                        <h6 class="mb-0 text-sm">{{ company.taxIdNumber }}</h6>
+                      </td>
+                      <td>
+                        <h6 class="mb-0 text-sm">{{ company.identityNumber }}</h6>
+                      </td>
+                      <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ user.userAddedAt |
+                            <h6 class="mb-0 text-sm"><i class=text-danger>Kayıt Tarihi:</i> {{ company.addedAt |
                               date: 'dd.MM.yyyy' }}</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ user.userIsActive?
+                            <h6 class="mb-0 text-sm"><i class=text-danger>Durumu:</i> {{ company.isActive?
                               "Aktif":"Pasif" }}</h6>
                           </div>
                         </div>
                       </td>
-                      <td>
-                        <button type="button" (click)="getUserCompanyList(user.userUserId)"
-                          class="btn btn-primary btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#companiesModal">
-                          Şirketler için Tıklayın
-                        </button>
-                      </td>
                       <td class="align-middle">
                         <button *ngIf="operationUpdate" type="button" class="btn btn-warning btn-sm mx-2"
                           title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateModal"
-                          (click)="getById(user.userUserId)">
+                          (click)="getCompany(company.id)">
                           <i class="material-icons opacity-10">edit</i>
                         </button>
                         <button *ngIf="operationUpdate" type="button" [swal]="changeStatusSwal"
-                          (confirm)="changeStatus(user.userUserId)" class="btn btn-info btn-sm mx-2"
+                          (confirm)="changeStatusCompany(company)" class="btn btn-info btn-sm mx-2"
                           title="Durumunu Değiştir">
                           <i class="material-icons opacity-10">check_box</i>
-                        </button>
-                        <a href="/user-operation-claim/{{ user.userMailValue }}" *ngIf="operationUpdate" type="button"
-                          class="btn btn-primary btn-sm mx-2" title="Yetkiler">
-                          <i class="material-icons opacity-10">cached</i>
-                        </a>
-                        <button *ngIf="operationDelete" type="button" class="btn btn-primary btn-sm mx-2"
-                          title="Sil" [swal]="userDeleteSwal"
-                          (confirm)="userDelete(user.userUserId)">
-                          <i class="material-icons opacity-10">delete</i>
                         </button>
                       </td>
                     </tr>
@@ -159,13 +146,8 @@
 
 
 <swal #changeStatusSwal title="Durumu Değiştir?"
-  text="Kullanıcının durumunu (Aktif <==> Pasif) değiştirmek istiyor musunuz?" type="question" [showCancelButton]="true"
+  text="Şirketin durumunu (Aktif <==> Pasif) değiştirmek istiyor musunuz?" type="question" [showCancelButton]="true"
   [focusCancel]="true" [swalOptions]="{ confirmButtonText: 'Değiştir', cancelButtonText: 'Vazgeç' }"></swal>
-
-  <swal #userDeleteSwal title="Kullanıcı Sil?"
-  text="Kullanıcı kaydını silmek istiyor musunuz? Bu işlemin dönüşü yoktur!" type="question" [showCancelButton]="true"
-  [focusCancel]="true" [swalOptions]="{ confirmButtonText: 'Sil', cancelButtonText: 'Vazgeç' }"></swal>
-
 
 <!-- Modal -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -173,7 +155,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Kullanıcı Ekleme Formu</h5>
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Şirket Ekleme Formu</h5>
         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -181,21 +163,29 @@
       <div class="modal-body">
         <form [formGroup]="addForm">
           <div [class]="changeInputClass(name)">
-            <label class="form-label">Kullanıcı Adı</label>
+            <label class="form-label">Şirket Ad</label>
             <input type="text" formControlName="name" [(ngModel)]="name" class="form-control">
           </div>
-          <div [class]="changeInputClass(email)">
-            <label class="form-label">Mail Adresi</label>
-            <input type="text" formControlName="email" [(ngModel)]="email" class="form-control">
+          <div [class]="changeInputClass(address)">
+            <label class="form-label">Adres</label>
+            <input type="text" formControlName="address" [(ngModel)]="address" class="form-control">
           </div>
-          <div [class]="changeInputClass(password)">
-            <label class="form-label">Şifre</label>
-            <input type="password" formControlName="password" [(ngModel)]="password" class="form-control">
+          <div [class]="changeInputClass(taxDepartment)">
+            <label class="form-label">Vergi Daresi</label>
+            <input type="text" formControlName="taxDepartment" [(ngModel)]="taxDepartment" class="form-control">
+          </div>
+          <div [class]="changeInputClass(taxIdNumber)">
+            <label class="form-label">Vergi Numarası</label>
+            <input type="text" formControlName="taxIdNumber" [(ngModel)]="taxIdNumber" class="form-control">
+          </div>
+          <div [class]="changeInputClass(identityNumber)">
+            <label class="form-label">T.C.</label>
+            <input type="text" formControlName="identityNumber" [(ngModel)]="identityNumber" class="form-control">
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn bg-gradient-primary" (click)="add()">Kullanıcı Ekle</button>
+        <button type="button" class="btn bg-gradient-primary" (click)="add()">Şirket Ekle</button>
         <button type="button" class="btn bg-gradient-secondary" id="closeModal" data-bs-dismiss="modal">Kapat</button>
       </div>
     </div>
@@ -208,92 +198,48 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Kullanıcı Güncelleme Formu</h5>
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Şirket Güncelleme Formu</h5>
         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form [formGroup]="updateForm">
+
+
           <div class="input-group input-group-dynamic mb-4">
-            <input type="text" class="form-control" formControlName="name" placeholder="Cari Ad">
-            <span class="input-group-text" id="basic-addon2">Cari Ad</span>
+            <input type="text" class="form-control" formControlName="name" placeholder="Şirket Adı">
+            <span class="input-group-text" id="basic-addon2">Şirket Adı</span>
+          </div>
+
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="address" placeholder="Adres">
+            <span class="input-group-text" id="basic-addon2">Adres</span>
           </div>
 
           <div class="input-group input-group-dynamic mb-4">
-            <input type="text" class="form-control" formControlName="email" placeholder="Mail Adresi">
-            <span class="input-group-text" id="basic-addon2">Mail Adresi</span>
+            <input type="text" class="form-control" formControlName="taxDepartment" placeholder="Vergi Dairesi">
+            <span class="input-group-text" id="basic-addon2">Vergi Dairesi</span>
           </div>
 
           <div class="input-group input-group-dynamic mb-4">
-            <input type="password" class="form-control" formControlName="password" placeholder="Şifre">
-            <span class="input-group-text" id="basic-addon2">Şifre</span>
+            <input type="text" class="form-control" formControlName="taxIdNumber" placeholder="Vergi Numarası">
+            <span class="input-group-text" id="basic-addon2">Vergi Numarası</span>
           </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="identityNumber" placeholder="T.C."
+              aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <span class="input-group-text" id="basic-addon2">T.C.</span>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn bg-gradient-primary" (click)="update()">Kullanıcı Güncelle</button>
-        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateModal"
-          data-bs-dismiss="modal">Kapat</button>
+        <button type="button" class="btn bg-gradient-primary" (click)="update()">Şirket Güncelle</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateModal" data-bs-dismiss="modal">Kapat</button>
       </div>
     </div>
   </div>
 </div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="companiesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Şirket Listesi</h5>
-        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <p class="alert alert-warning text-white">* Kullanıcıya şirket listesinden şirket ekleyebilirsiniz</p>
-          <hr>
-          <select class="form-select" [(ngModel)]="selectCompany">
-            <option value="0">Şirket Seçimi Yapın</option>
-            <option *ngFor="let company of adminCompaniesForUserDto" value="{{ company.id }}">{{ company.name }}</option>
-          </select>
-          <hr>
-          <button type="button" class="btn bg-gradient-primary" (click)="userCompanyAdd(userReletionShipDto.userUserId, selectCompany)">Şirket Ekle</button>
-          <hr>
-        </div>
-        <div class="form-group">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Şirket Adı</th>
-                <th>Adres</th>
-                <th>İşlemler</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let company of userReletionShipDto?.companies">
-                <td>{{ company.name}}</td>
-                <td>{{ company.address}}</td>
-                <td>
-                  <button type="button" class="btn bg-gradient-primary" [swal]="deleteUserCompanyReletionShipSwal"
-                    (confirm)="userCompanyDelete(userReletionShipDto.userUserId,company.id)">Bağlantıyı Kopar</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn bg-gradient-secondary" id="closeCompanyModal"
-          data-bs-dismiss="modal">Kapat</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<swal #deleteUserCompanyReletionShipSwal title="Bağlantı Kopar?"
-  text="Kullanıcı ile şirket arasındaki bağlantıyı koparmak istiyor musunuz?" type="question" [showCancelButton]="true"
-  [focusCancel]="true" [swalOptions]="{ confirmButtonText: 'Bağlantıyı Kopar', cancelButtonText: 'Vazgeç' }"></swal>

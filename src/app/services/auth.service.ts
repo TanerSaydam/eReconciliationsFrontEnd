@@ -30,6 +30,11 @@ export class AuthService {
     return this.httpClient.post<SingleResponseModel<TokenModel>>(api,loginModel);
   }
 
+  changeCompany(userId:string, companyId:number){
+    let api = this.apiUrl + "auth/changeCompany?userId=" + userId + "&companyId=" + companyId;
+    return this.httpClient.get<SingleResponseModel<TokenModel>>(api);
+  }
+
   getTermsAndConditions(){
     let api = this.apiUrl + "TermsAndConditions/get";
     return this.httpClient.get<SingleResponseModel<TermsAndConditions>>(api);

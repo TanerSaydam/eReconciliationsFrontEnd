@@ -24,6 +24,11 @@ import { CurrencyAccountFilterPipe } from './pipe/currency-account-filter.pipe';
 import { UserComponent } from './components/user/user.component';
 import { UserPipe } from './pipe/user.pipe';
 import { UserFilterPipe } from './pipe/user-filter.pipe';
+import { UserOperationClaimComponent } from './components/user/user-operation-claim/user-operation-claim.component';
+import { OperationClaimPipe } from './pipe/operation-claim.pipe';
+import { CompanyComponent } from './components/company/company.component';
+import { CompanyPipe } from './pipe/company.pipe';
+import { CompanyFilterPipe } from './pipe/company-filter.pipe';
 
 
 @NgModule({
@@ -41,7 +46,12 @@ import { UserFilterPipe } from './pipe/user-filter.pipe';
     CurrencyAccountFilterPipe,
     UserComponent,
     UserPipe,
-    UserFilterPipe
+    UserFilterPipe,
+    UserOperationClaimComponent,
+    OperationClaimPipe,
+    CompanyComponent,
+    CompanyPipe,
+    CompanyFilterPipe
   ],
   imports: [
     BrowserModule,

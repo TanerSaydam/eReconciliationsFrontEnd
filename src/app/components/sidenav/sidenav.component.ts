@@ -4,8 +4,10 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { UserOperationClaim } from 'src/app/models/userOperationClaimModel';
+import { UserThemeOption } from 'src/app/models/userThemeOptionModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -17,6 +19,13 @@ export class SidenavComponent implements OnInit {
   jwtHelper: JwtHelperService = new JwtHelperService;
 
   userOperationCliams:UserOperationClaim[] = [];
+  userThemeOption:UserThemeOption = {
+    sidenavType: "dark",
+    id:0,
+    mode:"",
+    sidenavColor:"primary",
+    userId:0
+  };
 
   isAuthenticated:boolean;
   name:string;
@@ -39,24 +48,26 @@ export class SidenavComponent implements OnInit {
     private router:Router,
     private userOperationClaimService:UserOperationClaimService,
     private spinner: NgxSpinnerService,
+    private userService:UserService
   ) { }
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.refresh();
     this.userOperationClaimGetList();
+    this.getUserTheme();
   }
 
   changeClass(url:string){
     this.currentUrl = this.router.routerState.snapshot.url;
     if (url == this.currentUrl) {
-      return "nav-link text-white active bg-gradient-primary";
+      let color = this.userThemeOption.sidenavColor;
+      return "nav-link text-white active bg-gradient-" + color;
     }
     else{
       return "nav-link text-white"
     }
   }
-
 
   refresh(){
     if (this.isAuthenticated) {
@@ -71,9 +82,20 @@ export class SidenavComponent implements OnInit {
       let userId = Object.keys(decode).filter(x => x.endsWith("/nameidentifier"))[0];
       this.companyId = decode[companyId];
       this.userId = decode[userId];
-      //console.log(decode);
     }
   }
+
+  getUserTheme(){
+    this.showSpinner();
+    this.userService.getTheme(this.userId).subscribe((res)=>{
+      this.userThemeOption = res.data
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
+      this.hideSpinner();
+    })
+  }
+
 
   logout(){
     localStorage.removeItem("token");

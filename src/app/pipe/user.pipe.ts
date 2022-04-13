@@ -12,8 +12,8 @@ export class UserPipe implements PipeTransform {
     }
 
     return value.filter(i=> {
-      const name = i.name.toLowerCase().toString().includes(searchString.toLowerCase())
-      const email = i.email.toLowerCase().toString().includes(searchString.toLowerCase())
+      const name = i.userUserName.toLowerCase().toString().includes(searchString.toLowerCase())
+      const email = i.userMail.toLowerCase().toString().includes(searchString.toLowerCase())
       return (name + email)
     })
   }

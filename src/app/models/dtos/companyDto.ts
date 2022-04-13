@@ -1,5 +1,6 @@
-export interface Company {
+export interface CompanyDto {
   id: number;
+  userId:string;
   name: string;
   address: string;
   taxDepartment: string;

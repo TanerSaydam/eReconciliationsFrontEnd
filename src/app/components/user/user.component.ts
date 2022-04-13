@@ -3,9 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { UserDto } from 'src/app/models/userDto';
-import { UserForRegisterToSecondAccountDto } from 'src/app/models/userForRegisterToSecondAccountDto';
+import { AdminCompaniesForUserDto } from 'src/app/models/dtos/adminCompaniesForUserDto';
+import { UserDto } from 'src/app/models/dtos/userDto';
+import { UserForRegisterToSecondAccountDto } from 'src/app/models/dtos/userForRegisterToSecondAccountDto';
+import { UserReletionShipDto } from 'src/app/models/dtos/userReletionShipDto';
 import { UserOperationClaim } from 'src/app/models/userOperationClaimModel';
+import { UserThemeOption } from 'src/app/models/userThemeOptionModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
 import { UserService } from 'src/app/services/user.service';
@@ -23,8 +26,18 @@ export class UserComponent implements OnInit {
   userOperationCliams:UserOperationClaim[] = []
   users:UserDto[] = [];
   userForRegisterToSecondAccountDto:UserForRegisterToSecondAccountDto;
+  usersReletionShipDto:UserReletionShipDto[] = [];
+  userReletionShipDto:UserReletionShipDto;
+  adminCompaniesForUserDto: AdminCompaniesForUserDto[] = [];
+  userThemeOption:UserThemeOption = {
+    sidenavType: "dark",
+    id:0,
+    mode:"",
+    sidenavColor:"primary",
+    userId:0
+  };
 
- addForm:FormGroup;
+  addForm:FormGroup;
   updateForm:FormGroup;
 
   title: string = "Aktif Kullanıcı Listesi";
@@ -46,6 +59,7 @@ export class UserComponent implements OnInit {
   name:string= "";
   email:string="";
   password:string="";
+  selectCompany:number = 0;
 
   filterText:string = "true";
 
@@ -63,7 +77,8 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     this.refresh();
     this.userOperationClaimGetList();
-    this.getUserList();
+    this.getUserTheme();
+    this.getAdminUsersList();
     this.createAddForm();
     this.createUpdateForm();
   }
@@ -79,6 +94,17 @@ export class UserComponent implements OnInit {
       this.companyId = decode[companyId];
       this.userId = decode[userId];
     }
+  }
+
+  getUserTheme(){
+    this.showSpinner();
+    this.userService.getTheme(this.userId).subscribe((res)=>{
+      this.userThemeOption = res.data
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
+      this.hideSpinner();
+    })
   }
 
   userOperationClaimGetList(){
@@ -100,6 +126,10 @@ export class UserComponent implements OnInit {
 
         if (element.operationClaimName == "User.Update") {
           this.operationUpdate = true;
+        }
+
+        if (element.operationClaimName == "User.Delete") {
+          this.operationDelete = true;
         }
 
         if (element.operationClaimName == "User.GetList") {
@@ -148,13 +178,93 @@ export class UserComponent implements OnInit {
     })
   }
 
+  getAdminUsersList(){
+    this.showSpinner();
+    this.userService.getAdminUsersList(this.userId).subscribe((res) => {
+      this.usersReletionShipDto = res.data;
+      this.hideSpinner();
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
+  userDelete(userId:number){
+    this.showSpinner();
+    this.userService.userDelete(userId).subscribe((res) => {
+      this.getAdminUsersList();
+      this.hideSpinner();
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
+  getUserCompanyList(userId:number){
+    this.showSpinner();
+    this.userService.getUserCompanyList(userId).subscribe((res) => {
+      this.userReletionShipDto = res.data;
+      this.getAdminCompanyList(this.userId, userId);
+      this.hideSpinner();
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
+  userCompanyDelete(userId:number, companyId:number){
+    this.showSpinner();
+    this.userService.userCompanyDelete(userId,companyId).subscribe((res) => {
+      this.toastr.warning(res.message);
+      this.getUserCompanyList(userId);
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
+  getAdminCompanyList(adminUserId: string, userUserId:number){
+    this.showSpinner();
+    this.userService.getAdminCompaniesForUser(adminUserId,userUserId).subscribe((res) => {
+      this.adminCompaniesForUserDto = res.data;
+      this.hideSpinner();
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
+  userCompanyAdd(userId: number, companyId:number){
+    if (companyId == 0) {
+      this.toastr.error("Şirket seçimi yapmadınız!")
+      return;
+    }
+
+    this.showSpinner();
+    this.userService.userCompanyAdd(userId,companyId).subscribe((res) => {
+      this.getUserCompanyList(userId);
+      this.toastr.success(res.message);
+      this.hideSpinner();
+    }, (err) => {
+      this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
+      //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
   createAddForm(){
     this.addForm = this.formBuilder.group({
       id: [0,Validators.required],
       name: ["",Validators.required],
       email: ["",Validators.required],
       password: ["",Validators.required],
-      companyId: [this.companyId,Validators.required]
+      companyId: [this.companyId,Validators.required],
+      adminUserId: [this.userId,Validators.required]
     });
   }
 
@@ -182,7 +292,6 @@ export class UserComponent implements OnInit {
     })
   }
 
-
   clearInput(){
     this.name = "";
     this.email = "";
@@ -196,7 +305,7 @@ export class UserComponent implements OnInit {
       this.userService.register(userRegisterModel).subscribe((res) => {
         this.hideSpinner();
         this.toastr.success(res.message);
-        this.getUserList();
+        this.getAdminUsersList();
         this.createAddForm();
         this.clearInput();
         document.getElementById("closeModal").click();
@@ -217,8 +326,8 @@ export class UserComponent implements OnInit {
       this.userService.update(userUpdateModel).subscribe((res) => {
         this.hideSpinner();
         this.toastr.warning(res.message);
-        this.getUserList();
-        this.createAddForm();
+        this.getAdminUsersList();
+        this.createUpdateForm();
         this.clearInput();
         document.getElementById("closeUpdateModal").click();
       }, (err) => {
@@ -237,7 +346,7 @@ export class UserComponent implements OnInit {
     this.userService.changeStatus(id).subscribe((res) => {
       this.hideSpinner();
       this.toastr.warning(res.message);
-      this.getUserList();
+      this.getAdminUsersList();
     }, (err) => {
       //console.log(err);
       this.toastr.error(err.error)

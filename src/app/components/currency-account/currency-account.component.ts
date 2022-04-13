@@ -6,9 +6,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CurrencyAccount } from 'src/app/models/currencyAccount';
 import { UserOperationClaim } from 'src/app/models/userOperationClaimModel';
+import { UserThemeOption } from 'src/app/models/userThemeOptionModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { CurrencyAccountService } from 'src/app/services/currency-account.service';
 import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
+import { UserService } from 'src/app/services/user.service';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -37,6 +39,13 @@ export class CurrencyAccountComponent implements OnInit {
     name: "",
     taxDepartment: "",
     taxIdNumber: ""
+  };
+  userThemeOption:UserThemeOption = {
+    sidenavType: "dark",
+    id:0,
+    mode:"",
+    sidenavColor:"primary",
+    userId:0
   };
 
   addForm: FormGroup;
@@ -76,12 +85,14 @@ export class CurrencyAccountComponent implements OnInit {
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
-    private userOperationClaimService:UserOperationClaimService
+    private userOperationClaimService:UserOperationClaimService,
+    private userService:UserService
   ) { }
 
   ngOnInit(): void {
     this.refresh();
     this.userOperationClaimGetList()
+    this.getUserTheme();
     this.getlist();
     this.createAddForm();
     this.createUpdateForm();
@@ -139,6 +150,17 @@ export class CurrencyAccountComponent implements OnInit {
     }, (err) => {
       this.toastr.error("Bir hata ile karşılaştık. Biraz sonra tekrar deneyin")
       //console.log(err)
+      this.hideSpinner();
+    })
+  }
+
+  getUserTheme(){
+    this.showSpinner();
+    this.userService.getTheme(this.userId).subscribe((res)=>{
+      this.userThemeOption = res.data
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
       this.hideSpinner();
     })
   }

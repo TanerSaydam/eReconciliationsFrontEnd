@@ -4,4 +4,5 @@ export interface UserForRegisterToSecondAccountDto{
   email:string;
   password:string;
   companyId:string;
+  adminUserId:string;
 }
