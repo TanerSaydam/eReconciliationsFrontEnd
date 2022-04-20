@@ -1,0 +1,499 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white">Yükleniyor...</p>
+</ngx-spinner>
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-{{
+    userThemeOption.sidenavType
+  }}" id="sidenav-main">
+  <app-sidenav></app-sidenav>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+  <app-nav></app-nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">
+                {{ title }}
+              </h6>
+              <button *ngIf="operationAdd" type="button" class="btn btn-warning mx-3" data-bs-toggle="modal"
+                data-bs-target="#addCurrencyReconciliationModal">
+                <i class="material-icons opacity-10">person_add</i>
+                Cari Mutabakat Ekle
+              </button>
+              <button *ngIf="operationAdd" type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                data-bs-target="#addExcelModal">
+                <i class="material-icons opacity-10">attach_file</i>
+                Excel'den Cari Mutabakat Listesi Yükle
+              </button>
+            </div>
+          </div>
+          <div *ngIf="operationList">
+            <div class="card-body mt-5">
+              <div class="row">
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                  <div class="card">
+                    <div class="card-header p-3 pt-2">
+                      <div
+                        class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">assignment</i>
+                      </div>
+                      <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">
+                          Toplam Mutabakat Sayısı
+                        </p>
+                        <h4 class="mb-0">
+                          {{
+                          accountReconciliationCountDto.allReconciliation
+                          | currency: "":"":"1.0-0"
+                          }}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                  <div class="card">
+                    <div class="card-header p-3 pt-2">
+                      <div
+                        class="icon icon-lg icon-shape bg-gradient-success shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">assignment_turned_in</i>
+                      </div>
+                      <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">
+                          Onaylanan Mutabakat
+                        </p>
+                        <h4 class="mb-0">
+                          {{
+                          accountReconciliationCountDto.succeedReconciliation
+                          | currency: "":"":"1.0-0"
+                          }}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                  <div class="card">
+                    <div class="card-header p-3 pt-2">
+                      <div
+                        class="icon icon-lg icon-shape bg-gradient-info shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">assignment_returned</i>
+                      </div>
+                      <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">
+                          Bekleyen Mutabakat Sayısı
+                        </p>
+                        <h4 class="mb-0">
+                          {{
+                          accountReconciliationCountDto.notResponseReconciliation
+                          | currency: "":"":"1.0-0"
+                          }}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                  <div class="card">
+                    <div class="card-header p-3 pt-2">
+                      <div
+                        class="icon icon-lg icon-shape bg-gradient-primary shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">assignment_late</i>
+                      </div>
+                      <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">
+                          Onaylanmayan Mutabakat Sayısı
+                        </p>
+                        <h4 class="mb-0">
+                          {{
+                          accountReconciliationCountDto.failReconciliation
+                          | currency: "":"":"1.0-0"
+                          }}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-5">
+                    <button type="button" class="btn btn-info" (click)="exportExcel()">
+                      <i class="fa fa-file-excel"></i>
+                      Cari Mutabakat Listesini Excel'e Aktar
+                    </button>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-check form-switch d-flex align-items-center mb-3">
+                      <input class="form-check-input" type="checkbox" id="allList" [(ngModel)]="allList"
+                        (change)="getListByCheck('allList')" />
+                      <label class="form-check-label mb-0 ms-2" for="allList">
+                        Tümü</label>
+                    </div>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-check form-switch d-flex align-items-center mb-3">
+                      <input class="form-check-input" type="checkbox" id="activeList" [(ngModel)]="activeList"
+                        (change)="getListByCheck('activeList')" checked />
+                      <label class="form-check-label mb-0 ms-2" for="activeList">
+                        Onaylılar</label>
+                    </div>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-check form-switch d-flex align-items-center mb-3">
+                      <input class="form-check-input" type="checkbox" id="passiveList" [(ngModel)]="passiveList"
+                        (change)="getListByCheck('passiveList')" />
+                      <label class="form-check-label mb-0 ms-2" for="passiveList">
+                        Bekleyenler</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="input-group input-group-outline my-3" style="width: 50%; margin-left: 50%">
+                      <label class="form-label">Aranacak Kelimeyi Yazın</label>
+                      <input type="text" autocomplete="off" [(ngModel)]="searchString" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table id="excel-table" class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                        Cari Ad / Cari Kod
+                      </th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                        Başlangıç Tarihi / Bitiş Tarihi
+                      </th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                        Döviz Tipi /Borç / Alacak
+                      </th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                        Mail
+                      </th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                        Mutabakat Durumu
+                      </th>
+                      <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                        İşlemler
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="
+                        let accountReconciliation of accountReconciliations
+                          | accountReconciliationPipe: searchString
+                          | accountReconciliationFilterPipe: filterText
+                      ">
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">
+                              {{ accountReconciliation.accountName }}
+                            </h6>
+                            <p class="text-xs text-secondary mb-0">
+                              {{ accountReconciliation.accountCode }}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">
+                              <i class="text-danger">Başlangıç Tarihi:</i>
+                              {{
+                              accountReconciliation.startingDate
+                              | date: "dd.MM.yyyy"
+                              }}
+                            </h6>
+                            <h6 class="mb-0 text-sm">
+                              <i class="text-danger">Bitiş Tarihi:</i>
+                              {{
+                              accountReconciliation.endingDate
+                              | date: "dd.MM.yyyy"
+                              }}
+                            </h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">
+                              <i class="text-danger">Döviz Tipi:</i>
+                              {{ accountReconciliation.currencyCode }}
+                            </h6>
+                            <h6 class="mb-0 text-sm">
+                              <i class="text-danger">Borç:</i>
+                              {{
+                              accountReconciliation.currencyDebit
+                              | currency: "":"":"1.2-2"
+                              }}
+                            </h6>
+                            <h6 class="mb-0 text-sm">
+                              <i class="text-danger">Alacak:</i>
+                              {{
+                              accountReconciliation.currencyCredit
+                              | currency: "":"":"1.2-2"
+                              }}
+                            </h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <h6 class="mb-0 text-sm">
+                          {{ accountReconciliation.accountEmail }}
+                        </h6>
+                      </td>
+                      <td>
+                        <h6 class="mb-0 text-sm">
+                          {{
+                          accountReconciliation.isResultSucceed == null
+                          ? "Mutabakat Cevaplanmadı": (accountReconciliation.isResultSucceed == true
+                          ? "Mutabıkız"
+                          : "Mutabık Değiliz")
+                          }}
+                        </h6>
+                      </td>
+                      <td class="align-middle">
+                        <button *ngIf="operationUpdate" type="button" class="btn btn-warning btn-sm mx-2"
+                          title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateCurrencyReconciliationModal"
+                          (click)="getById(accountReconciliation.id)">
+                          <i class="material-icons opacity-10">edit</i>
+                        </button>
+                        <button *ngIf="operationUpdate" type="button" class="btn btn-dark btn-sm mx-2"
+                          title="Mutabakat Maili Gönder"
+                          (click)="sendReconciliation(accountReconciliation.id)">
+                          <i class="material-icons opacity-10">alternate_email</i>
+                        </button>
+                        <button *ngIf="operationUpdate" type="button" class="btn btn-info btn-sm mx-2"
+                          title="Sözlü Mutabakat" data-bs-toggle="modal"
+                          data-bs-target="#resultCurrencyReconciliationModal"
+                          (click)="getByIdForResult(accountReconciliation.id)">
+                          <i class="material-icons opacity-10">perm_phone_msg</i>
+                        </button>
+                        <button *ngIf="operationDelete" type="button" [swal]="deleteSwal"
+                          (confirm)="deleteReconciliation(accountReconciliation.id)" class="btn btn-primary btn-sm"
+                          title="Sil">
+                          <i class="material-icons opacity-10">restore_from_trash</i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<swal #deleteSwal title="Sil?" text="Cari mutabakatı silmek istiyor musunuz?" type="question" [showCancelButton]="true"
+  [focusCancel]="true" [swalOptions]="{ confirmButtonText: 'Sil', cancelButtonText: 'Vazgeç' }"></swal>
+
+<!-- Modal -->
+<div class="modal fade" id="addCurrencyReconciliationModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">
+          Cari Mutabakat Ekleme Formu
+        </h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addForm">
+          <div>
+            <label class="form-label">Cari</label>
+            <select class="form-select" formControlName="currencyAccountId">
+              <option *ngFor="let currencyAccount of currencyAccounts" [value]="currencyAccount.id">
+                {{currencyAccount.code }} - {{ currencyAccount.name }}</option>
+            </select>
+          </div>
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Başlangıç Tarihi</span>
+            <input type="date" formControlName="startingDate" class="form-control" />
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Bitiş Tarihi</span>
+            <input type="date" formControlName="endingDate" class="form-control" />
+          </div>
+
+          <div>
+            <label class="form-label">Döviz Cinsi</label>
+            <select class="form-select" formControlName="currencyId">
+              <option *ngFor="let currency of currencies" [value]="currency.id">
+                {{currency.code }}</option>
+            </select>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Borç</span>
+            <input type="text" formControlName="currencyDebit" class="form-control" />
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Alacak</span>
+            <input type="text" formControlName="currencyCredit" class="form-control" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="add()">
+          Cari Mutabakat Ekle
+        </button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeModal" data-bs-dismiss="modal">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="updateCurrencyReconciliationModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">
+          Cari Mutabakat Güncelleme Formu
+        </h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm">
+          <div>
+            <label class="form-label">Cari</label>
+            <select class="form-select" formControlName="currencyAccountId">
+              <option *ngFor="let currencyAccount of currencyAccounts" [value]="currencyAccount.id">
+                {{currencyAccount.code }} - {{ currencyAccount.name }}</option>
+            </select>
+          </div>
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Başlangıç Tarihi</span>
+            <input type="date" formControlName="startingDate" class="form-control" />
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Bitiş Tarihi</span>
+            <input type="date" formControlName="endingDate" class="form-control" />
+          </div>
+
+          <div>
+            <label class="form-label">Döviz Cinsi</label>
+            <select class="form-select" [(ngModel)]="currency" formControlName="currencyId">
+              <option *ngFor="let currency of currencies" [value]="currency.id">
+                {{currency.code }}</option>
+            </select>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Borç</span>
+            <input type="text" formControlName="currencyDebit" [(ngModel)]="currencyDebit" class="form-control" />
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text" id="basic-addon1">Alacak</span>
+            <input type="text" formControlName="currencyCredit" [(ngModel)]="currencyCredit" class="form-control" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="update()">
+          Cari Mutabakat Güncelle
+        </button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateCurrencyReconciliationModal"
+          data-bs-dismiss="modal">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="resultCurrencyReconciliationModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">
+          Sözlü Mutabakat Formu
+        </h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-dynamic mb-4">
+          <span class="input-group-text" id="basic-addon1">Mutabakat Tarihi</span>
+          <input type="date" [(ngModel)]="resultDate" class="form-control" />
+        </div>
+
+        <div class="input-group input-group-dynamic mb-4">
+          <span class="input-group-text" id="basic-addon1">Mutabakat Yapılan Kişi</span>
+          <input type="text" [(ngModel)]="resultName" class="form-control" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="updateResult()">
+          Sözlü Mutabakat
+        </button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeResultCurrencyReconciliationModal"
+          data-bs-dismiss="modal">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">
+          Excel'den Cari Mutabakat Listesi Yükle
+        </h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input class="form-control" type="file" (change)="onChange($event)" id="addFromExcelFile" />
+        <hr />
+        <p>
+          <a href="/../assets/files/CariMutabakat.xlsx" target="_blank"><i>Örnek Excel Dosyasını İndir</i></a>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-success" (click)="addFormExcelCurrencyAccount()">
+          Yükle
+        </button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeAddFromExcelModal" data-bs-dismiss="modal">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

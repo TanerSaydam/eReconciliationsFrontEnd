@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CurrencyAccount } from '../models/currencyAccount';
+import { CurrencyAccount } from '../models/currencyAccountModel';
 
 @Pipe({
   name: 'currencyAccountFilterPipe'

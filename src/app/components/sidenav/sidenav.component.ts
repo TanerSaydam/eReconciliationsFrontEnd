@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { MailParameter } from 'src/app/models/mailParameterModel';
+import { MailTemplate } from 'src/app/models/mailTemplateModel';
 import { UserOperationClaim } from 'src/app/models/userOperationClaimModel';
 import { UserThemeOption } from 'src/app/models/userThemeOptionModel';
 import { AuthService } from 'src/app/services/auth.service';
+import { MailParameterService } from 'src/app/services/mail-parameter.service';
+import { MailTemplateService } from 'src/app/services/mail-template.service';
 import { UserOperationClaimService } from 'src/app/services/user-operation-claim.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -15,6 +20,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
+
 
   jwtHelper: JwtHelperService = new JwtHelperService;
 
@@ -26,6 +32,24 @@ export class SidenavComponent implements OnInit {
     sidenavColor:"primary",
     userId:0
   };
+  mailParameterModel: MailParameter = {
+    companyId:0,
+    email:"",
+    id:0,
+    password:"",
+    port:0,
+    smtp:"",
+    ssl:false
+    };
+  mailTemplateModel:MailTemplate = {
+    companyId:0,
+    type:"Mutabakat",
+    id:0,
+    value:""
+  };
+
+  updateForm:FormGroup;
+  updateMailTempleForm:FormGroup
 
   isAuthenticated:boolean;
   name:string;
@@ -33,30 +57,39 @@ export class SidenavComponent implements OnInit {
   currentUrl:string = "";
   companyId:string;
   userId:string;
+  editorText:any;
 
   currencyAccount = false;
   user = false;
   company = false;
   mailParameter = false;
-  mailTemplete = false;
+  mailTemplate = false;
   accountReconciliation = false;
   baBsReconciliation = false;
 
   constructor(
+    @Inject("validHatasi") private validHatasi:string,
     private authService:AuthService,
     private toastr: ToastrService,
     private router:Router,
     private userOperationClaimService:UserOperationClaimService,
     private spinner: NgxSpinnerService,
-    private userService:UserService
-  ) { }
+    private userService:UserService,
+    private formBuilder:FormBuilder,
+    private mailParameterService:MailParameterService,
+    private mailTemplateService:MailTemplateService,
+  ) {
+  }
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.refresh();
     this.userOperationClaimGetList();
     this.getUserTheme();
+    this.createUpdateForm();
+    this.getMailTemplate();
   }
+
 
   changeClass(url:string){
     this.currentUrl = this.router.routerState.snapshot.url;
@@ -96,6 +129,92 @@ export class SidenavComponent implements OnInit {
     })
   }
 
+  getMailParameter(){
+    this.showSpinner();
+    this.mailParameterService.getById(this.companyId).subscribe((res)=>{
+      if (res.data != null) {
+        this.mailParameterModel = res.data
+      this.updateForm.controls["email"].setValue(res.data.email);
+      this.updateForm.controls["password"].setValue(res.data.password);
+      this.updateForm.controls["smtp"].setValue(res.data.smtp);
+      this.updateForm.controls["port"].setValue(res.data.port);
+      this.updateForm.controls["ssl"].setValue(res.data.ssl);
+      this.updateForm.controls["id"].setValue(res.data.id);
+      }
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
+      this.hideSpinner();
+    })
+  }
+
+  getMailTemplate(){
+    this.showSpinner();
+    this.mailTemplateService.getByCompanyId(this.companyId).subscribe((res)=>{
+      if (res.data != null) {
+        this.mailTemplateModel = res.data;
+        this.editorText = res.data.value;
+      }
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
+      this.hideSpinner();
+    })
+  }
+
+  updateMailTemplere(){
+    this.showSpinner();
+    this.mailTemplateModel.value = this.editorText;
+    this.mailTemplateService.update(this.mailTemplateModel).subscribe((res)=>{
+      this.toastr.warning(res.message);
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
+      this.hideSpinner();
+    })
+  }
+
+  connectionTest(){
+    this.showSpinner();
+    this.mailParameterService.connectionTest(this.companyId).subscribe((res)=>{
+      this.toastr.success(res.message);
+      this.hideSpinner();
+    },(err)=>{
+      console.log(err);
+      this.hideSpinner();
+    })
+  }
+
+
+  createUpdateForm(){
+    this.updateForm = this.formBuilder.group({
+      id: [0,Validators.required],
+      email: ["",Validators.required],
+      password: [""],
+      companyId: [this.companyId,Validators.required],
+      smtp: ["",Validators.required],
+      port: [0,Validators.required],
+      ssl: [false,Validators.required]
+    });
+  }
+
+  update(){
+    if (this.updateForm.valid) {
+      let mailParameterModel = Object.assign({}, this.updateForm.value);
+      this.showSpinner();
+      this.mailParameterService.update(mailParameterModel).subscribe((res) => {
+        this.hideSpinner();
+        this.toastr.warning(res.message);
+        //document.getElementById("closeMailParameterModal").click();
+      }, (err) => {
+        //console.log(err);
+        this.toastr.error(err.error)
+        this.hideSpinner();
+      })
+    }else{
+      this.toastr.error(this.validHatasi);
+    }
+  }
 
   logout(){
     localStorage.removeItem("token");
@@ -122,7 +241,7 @@ export class SidenavComponent implements OnInit {
           this.user = true;
           this.company = true;
           this.mailParameter = true;
-          this.mailTemplete = true;
+          this.mailTemplate = true;
           this.accountReconciliation = true;
           this.baBsReconciliation = true;
         }
@@ -143,8 +262,8 @@ export class SidenavComponent implements OnInit {
           this.mailParameter = true;
         }
 
-        if (element.operationClaimName == "MailTemplete") {
-          this.mailTemplete = true;
+        if (element.operationClaimName == "MailTemplate") {
+          this.mailTemplate = true;
         }
 
         if (element.operationClaimName == "AccountReconciliation") {

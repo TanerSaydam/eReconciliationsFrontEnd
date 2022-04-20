@@ -19,7 +19,7 @@
               <h6 class="text-white text-capitalize ps-3">
                 {{title}}
               </h6>
-              <button *ngIf="operationAdd" type="button" class="btn btn-warning mx-3" data-bs-toggle="modal" data-bs-target="#addModal">
+              <button *ngIf="operationAdd" type="button" class="btn btn-warning mx-3" data-bs-toggle="modal" data-bs-target="#addCurrencyAccountModal">
                 <i class="material-icons opacity-10">person_add</i>
                 Cari Ekle
               </button>
@@ -124,7 +124,7 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <button *ngIf="operationUpdate" type="button" class="btn btn-warning btn-sm mx-2" title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateModal" (click)="getCurrencyAccount(currencyAccount.id)">
+                      <button *ngIf="operationUpdate" type="button" class="btn btn-warning btn-sm mx-2" title="Güncelle" data-bs-toggle="modal" data-bs-target="#updateCurrencyAccountModal" (click)="getCurrencyAccount(currencyAccount.id)">
                         <i class="material-icons opacity-10">edit</i>
                       </button>
                       <button *ngIf="operationUpdate" type="button" (click)="currenctCurrency(currencyAccount)" [swal]="changeStatusSwal" (confirm)="changeStatusCurrencyAccount(currencyAccount)" class="btn btn-info btn-sm mx-2" title="Durumunu Değiştir">
@@ -153,7 +153,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addCurrencyAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -200,14 +200,14 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn bg-gradient-primary" (click)="addCurrencyAccount()">Cari Ekle</button>
-        <button type="button" class="btn bg-gradient-secondary" id="closeModal" data-bs-dismiss="modal">Kapat</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeCurrencyAccountModal" data-bs-dismiss="modal">Kapat</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateCurrencyAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -264,7 +264,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn bg-gradient-primary" (click)="updateCurrencyAccount()">Cari Güncelle</button>
-        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateModal" data-bs-dismiss="modal">Kapat</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeUpdateCurrencyAccountModal" data-bs-dismiss="modal">Kapat</button>
       </div>
     </div>
   </div>

@@ -19,7 +19,7 @@
       </a>
     </li>
     <li *ngIf="accountReconciliation" class="nav-item">
-      <a [class]="changeClass('/ereconcilitions')" href="#">
+      <a [class]="changeClass('/ereconcilitions')" href="/account-reconciliation">
         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
           <i class="material-icons opacity-10">assignment_turned_in</i>
         </div>
@@ -64,15 +64,15 @@
       </a>
     </li>
     <li *ngIf="mailParameter" class="nav-item">
-      <a [class]="changeClass('/mail-parameter')" href="#">
+      <a [class]="changeClass('/mail-parameter')" href="#" data-bs-toggle="modal" data-bs-target="#mailParameterModal" (click)="getMailParameter()">
         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
           <i class="material-icons opacity-10">alternate_email</i>
         </div>
         <span class="nav-link-text ms-1">Mail Parametreleri</span>
       </a>
     </li>
-    <li *ngIf="mailTemplete" class="nav-item">
-      <a [class]="changeClass('/mail-templete')" href="#">
+    <li *ngIf="mailTemplate" class="nav-item">
+      <a [class]="changeClass('/mail-templete')" href="#" data-bs-toggle="modal" data-bs-target="#mailTempleteModal" (click)="getMailTemplate()">
         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
           <i class="material-icons opacity-10">comment</i>
         </div>
@@ -89,5 +89,79 @@
       <i class="fa fa-door-open"></i>
       Çıkış Yap
     </a>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="mailParameterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Mail Parametreleri Formu</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm">
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="email" class="form-control" formControlName="email" placeholder="Mail">
+            <span class="input-group-text" id="basic-addon2">Mail</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="password" placeholder="Şifre">
+            <span class="input-group-text" id="basic-addon2">Şifre</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="text" class="form-control" formControlName="smtp" placeholder="SMTP">
+            <span class="input-group-text" id="basic-addon2">SMTP</span>
+          </div>
+
+          <div class="input-group input-group-dynamic mb-4">
+            <input type="number" class="form-control" formControlName="port" placeholder="Port">
+            <span class="input-group-text" id="basic-addon2">Port</span>
+          </div>
+
+          <div class="form-check form-switch d-flex align-items-center mb-3">
+            <input class="form-check-input" type="checkbox" id="ssl" formControlName="ssl">
+            <label class="form-check-label mb-0 ms-2" for="ssl">SSL</label>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="update()">Güncelle</button>
+        <button type="button" class="btn bg-gradient-info" (click)="connectionTest()">Bağlantı Test Maili Gönder</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeMailParameterModal"
+          data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mailTempleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Mail Şablonları Formu</h5>
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <angular-editor [(ngModel)]="editorText" [ngModelOptions]="{standalone: true}"></angular-editor>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn bg-gradient-primary" (click)="updateMailTemplere()">Güncelle</button>
+        <button type="button" class="btn bg-gradient-secondary" id="closeMailTemplateModal"
+          data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
   </div>
 </div>

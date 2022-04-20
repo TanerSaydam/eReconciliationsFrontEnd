@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AccountReconciliationResultComponent } from './components/account-reconciliation/account-reconciliation-result/account-reconciliation-result.component';
+import { AccountReconciliationComponent } from './components/account-reconciliation/account-reconciliation.component';
 import { CompanyComponent } from './components/company/company.component';
 import { CurrencyAccountComponent } from './components/currency-account/currency-account.component';
 import { HomeComponent } from './components/home/home.component';
@@ -14,6 +16,9 @@ import { LoginGuard } from './guards/login.guard';
 const routes: Routes = [
   {path:'',component:HomeComponent, canActivate: [LoginGuard]},
   {path:'currency-account',component:CurrencyAccountComponent, canActivate: [LoginGuard]},
+  {path:'account-reconciliation',component:AccountReconciliationComponent, canActivate: [LoginGuard]},
+  {path:'account-reconciliation-result',component:LoginComponent},
+  {path:'account-reconciliation-result/:value',component:AccountReconciliationResultComponent},
   {path:'user',component:UserComponent, canActivate: [LoginGuard]},
   {path:'user-operation-claim',component:UserComponent, canActivate: [LoginGuard]},
   {path:'user-operation-claim/:value',component:UserOperationClaimComponent, canActivate: [LoginGuard]},

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { CurrencyAccount } from 'src/app/models/currencyAccount';
+import { CurrencyAccount } from 'src/app/models/currencyAccountModel';
 import { UserOperationClaim } from 'src/app/models/userOperationClaimModel';
 import { UserThemeOption } from 'src/app/models/userThemeOptionModel';
 import { AuthService } from 'src/app/services/auth.service';
@@ -275,7 +275,7 @@ export class CurrencyAccountComponent implements OnInit {
         this.toastr.success(res.message);
         this.getlist();
         this.createAddForm();
-        document.getElementById("closeModal").click();
+        document.getElementById("closeCurrencyAccountModal").click();
       }, (err) => {
         //console.log(err);
         this.toastr.error(err.error)
@@ -287,7 +287,7 @@ export class CurrencyAccountComponent implements OnInit {
   }
 
   updateCurrencyAccount() {
-    if (this.addForm.valid) {
+    if (this.updateForm.valid) {
       let currencyAccountModel = Object.assign({}, this.updateForm.value);
       this.showSpinner();
       this.currencyAccountService.update(currencyAccountModel).subscribe((res) => {
@@ -295,7 +295,7 @@ export class CurrencyAccountComponent implements OnInit {
         this.toastr.warning(res.message);
         this.getlist();
         this.createAddForm();
-        document.getElementById("closeUpdateModal").click();
+        document.getElementById("closeUpdateCurrencyAccountModal").click();
       }, (err) => {
         //console.log(err);
         this.toastr.error(err.error)

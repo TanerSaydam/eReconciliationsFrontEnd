@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CurrencyAccount } from '../models/currencyAccount';
+import { CurrencyAccount } from '../models/currencyAccountModel';
 import { ListResponseModel } from '../models/listResponseModel';
 import { ResponseModel } from '../models/reponseModel';
 import { SingleResponseModel } from '../models/singleResponseModel';

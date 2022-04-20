@@ -29,7 +29,12 @@ import { OperationClaimPipe } from './pipe/operation-claim.pipe';
 import { CompanyComponent } from './components/company/company.component';
 import { CompanyPipe } from './pipe/company.pipe';
 import { CompanyFilterPipe } from './pipe/company-filter.pipe';
-
+import { QuillModule } from 'ngx-quill';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { AccountReconciliationComponent } from './components/account-reconciliation/account-reconciliation.component';
+import { AccountReconciliationPipe } from './pipe/account-reconciliation.pipe';
+import { AccountReconciliationFilterPipe } from './pipe/account-reconciliation-filter.pipe';
+import { AccountReconciliationResultComponent } from './components/account-reconciliation/account-reconciliation-result/account-reconciliation-result.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +56,11 @@ import { CompanyFilterPipe } from './pipe/company-filter.pipe';
     OperationClaimPipe,
     CompanyComponent,
     CompanyPipe,
-    CompanyFilterPipe
+    CompanyFilterPipe,
+    AccountReconciliationComponent,
+    AccountReconciliationPipe,
+    AccountReconciliationFilterPipe,
+    AccountReconciliationResultComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +69,9 @@ import { CompanyFilterPipe } from './pipe/company-filter.pipe';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FormsModule,
+    AngularEditorModule,
     NgxSpinnerModule,
+    QuillModule.forRoot(),
     SweetAlert2Module.forRoot(),
     ToastrModule.forRoot({
       timeOut: 3000,
@@ -70,10 +81,10 @@ import { CompanyFilterPipe } from './pipe/company-filter.pipe';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    {provide: 'apiUrl', useValue: 'https://localhost:7220/api/'},
-    {provide: 'validHatasi', useValue: 'Zorunlu alanları doldurun'},
-    {provide: APP_BASE_HREF, useValue: '/'},
-    {provide:HTTP_INTERCEPTORS,useClass:AuthInterceptor, multi:true},
+    { provide: 'apiUrl', useValue: 'https://localhost:7220/api/' },
+    { provide: 'validHatasi', useValue: 'Zorunlu alanları doldurun' },
+    { provide: APP_BASE_HREF, useValue: '/' },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     [DatePipe]
   ],
   bootstrap: [AppComponent]
