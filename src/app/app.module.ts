@@ -35,6 +35,7 @@ import { AccountReconciliationComponent } from './components/account-reconciliat
 import { AccountReconciliationPipe } from './pipe/account-reconciliation.pipe';
 import { AccountReconciliationFilterPipe } from './pipe/account-reconciliation-filter.pipe';
 import { AccountReconciliationResultComponent } from './components/account-reconciliation/account-reconciliation-result/account-reconciliation-result.component';
+import { MyChartComponent } from './components/my-chart/my-chart.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { AccountReconciliationResultComponent } from './components/account-recon
     AccountReconciliationComponent,
     AccountReconciliationPipe,
     AccountReconciliationFilterPipe,
-    AccountReconciliationResultComponent
+    AccountReconciliationResultComponent,
+    MyChartComponent
   ],
   imports: [
     BrowserModule,

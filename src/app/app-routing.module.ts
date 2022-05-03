@@ -7,6 +7,7 @@ import { CurrencyAccountComponent } from './components/currency-account/currency
 import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/login/forgot-password/forgot-password.component';
 import { LoginComponent } from './components/login/login.component';
+import { MyChartComponent } from './components/my-chart/my-chart.component';
 import { ConfirmComponent } from './components/register/confirm/confirm.component';
 import { RegisterComponent } from './components/register/register.component';
 import { UserOperationClaimComponent } from './components/user/user-operation-claim/user-operation-claim.component';
@@ -28,7 +29,8 @@ const routes: Routes = [
   {path:'registerConfirm',component:LoginComponent},
   {path:'registerConfirm/:value',component:ConfirmComponent},
   {path:'forgot-password/:value',component:ForgotPasswordComponent},
-  {path:'forgot-password',component:LoginComponent}
+  {path:'forgot-password',component:LoginComponent},
+  {path:'chart', component:MyChartComponent}
 ];
 
 @NgModule({

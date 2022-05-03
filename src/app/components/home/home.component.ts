@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserThemeOption } from 'src/app/models/userThemeOptionModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
+import { Chart } from 'node_modules/chart.js';
 
 @Component({
   selector: 'app-home',
@@ -13,26 +14,26 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class HomeComponent implements OnInit {
 
-  jwtHelper:JwtHelperService = new JwtHelperService;
+  jwtHelper: JwtHelperService = new JwtHelperService;
 
-  userThemeOption:UserThemeOption = {
+  userThemeOption: UserThemeOption = {
     sidenavType: "dark",
-    id:0,
-    mode:"",
-    sidenavColor:"primary",
-    userId:0
+    id: 0,
+    mode: "",
+    sidenavColor: "primary",
+    userId: 0
   };
 
   styleClass = "";
-  isAuthenticated:boolean = false;
-  companyId:string;
-  userId:string;
+  isAuthenticated: boolean = false;
+  companyId: string;
+  userId: string;
 
   constructor(
-    private spinner:NgxSpinnerService,
-    private userService:UserService,
-    private toastr:ToastrService,
-    private authService:AuthService
+    private spinner: NgxSpinnerService,
+    private userService: UserService,
+    private toastr: ToastrService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -40,11 +41,11 @@ export class HomeComponent implements OnInit {
     this.getUserTheme();
   }
 
-  changeStyleClass(text:string){
+  changeStyleClass(text: string) {
     return "fixed-plugin ps " + text;
   }
 
-  refresh(){
+  refresh() {
     this.isAuthenticated = this.authService.isAuthenticated();
     if (this.isAuthenticated) {
       let token = localStorage.getItem("token");
@@ -57,12 +58,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getUserTheme(){
+  getUserTheme() {
     this.showSpinner();
-    this.userService.getTheme(this.userId).subscribe((res)=>{
+    this.userService.getTheme(this.userId).subscribe((res) => {
       this.userThemeOption = res.data
       this.hideSpinner();
-    },(err)=>{
+    }, (err) => {
       console.log(err);
       this.hideSpinner();
     })
